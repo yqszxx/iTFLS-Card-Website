@@ -3,11 +3,12 @@
 namespace iTFLS\Card\ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Util\Codes;
+use iTFLS\Card\ApiBundle\Form\Type\CardType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use iTFLS\Card\ApiBundle\Entity\Card;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Symfony\Component\Routing\Annotation\Route;
 
 class CardsController extends FOSRestController implements ClassResourceInterface
 {
@@ -36,18 +37,13 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
     }
 
     /**
-     * Get action
+     * Get a card by SN
      * @var integer $id Id of the entity
      * @return array
      *
      * @ApiDoc(
      *  description="Get a card by SN.",
-
      * )
-     *     *  filters={
-     *      {"name"="a-filter", "dataType"="integer"},
-     *      {"name"="another-filter", "dataType"="string", "pattern"="(foo|bar) ASC|DESC"}
-     *  }
      */
     public function getAction($cardSN)
     {
@@ -56,8 +52,39 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
         $card = $em->getRepository('iTFLSCardApiBundle:Card')->findOneBy(array('cardSN'=>$cardSN));
 
         if (!$card) {
-            throw $this->createNotFoundException('Unable to find card entity');
+            throw $this->createNotFoundException('No cards found.');
         }
         return $card;
+    }
+
+    /**
+     * New a card
+     * @param Request $request
+     * @return array
+     * @internal param int $id Id of the entity
+     */
+    public function postAction(Request $request)
+    {
+        $card = new Card();
+        $form = $this->createForm(new CardType(), $card);
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($card);
+            $em->flush();
+
+            return $this->redirectView(
+                $this->generateUrl(
+                    'get_cards',
+                    array('cardSN' => $card->getCardSN())
+                ),
+                Codes::HTTP_CREATED
+            );
+        }
+
+        return array(
+            'form' => $form,
+        );
     }
 }
