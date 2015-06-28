@@ -2,7 +2,9 @@
 
 namespace iTFLS\Card\ApiBundle\Entity;
 
+use Application\Sonata\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Asserts;
 
 /**
  * Card
@@ -24,23 +26,33 @@ class Card
     /**
      * @var string
      *
-     * @ORM\Column(name="card_sn", type="string", length=8)
+     * @ORM\Column(name="sn", type="string", length=8, unique=true)
+     *
+     * @Asserts\NotBlank()
      */
-    private $cardSN;
+    private $sn;
 
     /**
-     * @var boolean
+     * @var array
      *
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(name="passwords", type="array")
      */
-    private $isActive;
+    private $passwords;
 
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(name="balance", type="float")
+     * @ORM\OneToOne(targetEntity="Application\Sonata\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", nullable=true)
      */
-    private $balance;
+    private $owner;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="smallint")
+     */
+    private $status;
 
 
     /**
@@ -54,71 +66,101 @@ class Card
     }
 
     /**
-     * Get cardNo
+     * Set sn
      *
-     * @return string
-     */
-    public function getCardSN()
-    {
-        return $this->cardSN;
-    }
-
-    /**
-     * Set cardNo
-     *
-     * @param string $cardSN
+     * @param string $sn
      * @return Card
      */
-    public function setCardSN($cardSN)
+    public function setSn($sn)
     {
-        $this->cardSN = $cardSN;
+        $this->sn = strtoupper($sn);
 
         return $this;
     }
 
     /**
-     * Get isActive
+     * Get sn
      *
-     * @return boolean
+     * @return string 
      */
-    public function getIsActive()
+    public function getSn()
     {
-        return $this->isActive;
+        return $this->sn;
     }
 
     /**
-     * Set isActive
+     * Set passwords
      *
-     * @param boolean $isActive
+     * @param array $passwords
      * @return Card
      */
-    public function setIsActive($isActive)
+    public function setPasswords($passwords)
     {
-        $this->isActive = $isActive;
+        $this->passwords = $passwords;
 
         return $this;
     }
 
     /**
-     * Get balance
+     * Get passwords
      *
-     * @return float
+     * @return array 
      */
-    public function getBalance()
+    public function getPasswords()
     {
-        return $this->balance;
+        return $this->passwords;
     }
 
     /**
-     * Set balance
+     * Set status
      *
-     * @param float $balance
+     * @param integer $status
      * @return Card
      */
-    public function setBalance($balance)
+    public function setStatus($status)
     {
-        $this->balance = $balance;
+        $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
+
+    /**
+     * Set owner
+     *
+     * @param User $owner
+     * @return Card
+     */
+    public function setOwner(User $owner = null)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    public function __toString()
+    {
+        return $this->getSn();
     }
 }

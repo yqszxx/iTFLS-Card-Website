@@ -18,9 +18,10 @@ class CardAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('cardSN', 'text', array('label' => 'Card Hex SN'))
-            ->add('isActive', 'checkbox')
-            ->add('balance', 'number')
+            ->add('sn')
+            ->add('owner')
+            ->add('passwords')
+            ->add('status')
         ;
     }
 
@@ -28,7 +29,7 @@ class CardAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('isActive')
+            ->add('status')
         ;
     }
 
@@ -37,9 +38,8 @@ class CardAdmin extends Admin
     {
         $listMapper
             ->add('id')
-            ->addIdentifier('cardSN')
-            ->add('isActive')
-            ->add('balance')
+            ->addIdentifier('sn')
+            ->add('status')
         ;
     }
 }

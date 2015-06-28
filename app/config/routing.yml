@@ -1,11 +1,11 @@
-i_tfls_card_api_card:
+i_tfls_card_apis:
     type:         rest
     prefix:       /api/card
-    resource:     iTFLS\Card\ApiBundle\Controller\CardsController
+    resource:     '@iTFLSCardApiBundle/Resources/config/routing/api.yml'
 
 sonata_api_user:
     type:         rest
-    prefix:       /api/card/user
+    prefix:       /api/user
     resource:     "@SonataUserBundle/Resources/config/routing/api.xml"
 
 NelmioApiDocBundle:

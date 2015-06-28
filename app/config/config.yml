@@ -102,11 +102,14 @@ sonata_user:
     security_acl: true
     manager_type: orm # can be orm or mongodb
 
+    admin:
+        user:
+            class:  Application\Sonata\UserBundle\Admin\Entity\UserAdmin
+
 fos_user:
     db_driver:      orm # can be orm or odm
     firewall_name:  main
     user_class:     Application\Sonata\UserBundle\Entity\User
-
 
     group:
         group_class:   Application\Sonata\UserBundle\Entity\Group
@@ -128,6 +131,7 @@ fos_rest:
         validate: true
     routing_loader:
         default_format: json
+    disable_csrf_role: ROLE_API_USER
 
 sensio_framework_extra:
     view:

@@ -1,0 +1,3 @@
+cards:
+    type:         rest
+    resource:     iTFLS\Card\ApiBundle\Controller\CardsController

@@ -45,11 +45,11 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
      *  description="Get a card by SN.",
      * )
      */
-    public function getAction($cardSN)
+    public function getAction($sn)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $card = $em->getRepository('iTFLSCardApiBundle:Card')->findOneBy(array('cardSN'=>$cardSN));
+        $card = $em->getRepository('iTFLSCardApiBundle:Card')->findOneBy(array('sn' => $sn));
 
         if (!$card) {
             throw $this->createNotFoundException('No cards found.');
@@ -67,7 +67,7 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
     {
         $card = new Card();
         $form = $this->createForm(new CardType(), $card);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -77,7 +77,7 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
             return $this->redirectView(
                 $this->generateUrl(
                     'get_cards',
-                    array('cardSN' => $card->getCardSN())
+                    array('sn' => $card->getSn())
                 ),
                 Codes::HTTP_CREATED
             );
@@ -87,4 +87,5 @@ class CardsController extends FOSRestController implements ClassResourceInterfac
             'form' => $form,
         );
     }
+
 }
